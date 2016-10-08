@@ -1,3 +1,4 @@
+import os
 import math
 import hashlib
 
@@ -7,7 +8,7 @@ prob_list = []
 
 def Q1A():
 	
-	pw_file = open("pwds300", "r")
+	pw_file = open("../../pwds300", "r")
 	
 	#output file
 	result_file = open("Q1A.text","w+")
@@ -22,55 +23,70 @@ def Q1A():
 		#if pw doesn't exist, then add it to dictionary.
 		else:
 			pw_and_freq[st] = 1
-	#sort by passwords.
-	sorted(pw_and_freq)
-	
-	for pw in pw_and_freq:
+
+	for pw in sorted(pw_and_freq):
 		#format output.
 		result_file.write("%s\t%d\t%.10f\n" %(pw,pw_and_freq[pw],pw_prob(pw_and_freq[pw])))
 		
 	pw_file.close()
 	result_file.close()
-	print(len(pw_and_freq))
+	#print(len(pw_and_freq))
 	
 #calculate probability	
 def pw_prob(pw_freq):
 	probability = round(float(pw_freq)/320412510.0,10)
-	return probability
+	prob_list.append(float(probability))
+	return float(probability)
 	
 Q1A()
 
 def Q2A():
 	#entropy = sum of probablity*log(probability) for each password.
 	#for each prob in problist, calculate entropy and then add 'em all up.
+	result_file = open('Q2A.txt','w+')
 	entropy = 0.0
 	for prob in prob_list:
-		entropy += -prob*math.log10(prob)
-	result_file = open('Q2A.txt','w+')
-	result_file.write("%f" %(round(entropy,3)))
+		entropy += -prob*math.log(prob,2)
+	#print "%.3f" %(entropy)
+	result_file.write("%.3f" %(entropy))
 	result_file.close()
 	
-#Q2A()
+Q2A()
 
 def Q2B():
 	#max entropy = log2(number of unique pw).
 	#In this case, number of unique passwords = length of dictionary. 
-	max_entropy = 0.0
 	max_entropy = math.log(len(pw_and_freq),2)
 	result_file = open('Q2B.txt','w+')
 	result_file.write("%f" %(max_entropy))
 	result_file.close()
 
-#def Q3A():
+Q2B()
+
 #repeat Q2A but this time, only unique passwords(multiset from the pws file) out of the first column from pw_and_freq
 # num of unique pws = length of dictionary.
+def Q3A():
+	result_file = open('Q3A.txt','w+')
+	entropy = 0.0
+	for prob in prob_list:
+		probability = float(1/len(prob_list))
+		print "probability: %.3f" %(probability)
+		#entropy += -probability*math.log(probability,2)
+	print "%.3f" %(entropy)
+	result_file.write("%.3f" %(entropy))
+	result_file.close()
 
+#Q3A()
 #def Q3B():
 #samething as Q2B
 
 #brute force search for password, given hash values. Dictionary is sorted by pws(order of likelyhood), so it would take less than O(n), hopefully.
 def Q4():
-	md5_val = ['ba931c15ec0163c4bb339f41571694ce','c9cd905fc459e5550b8c3b01d4346c25','e9269d9e52a692f52caece9d0e7cdae1','660719b4a7591769583a7c8d20c6dfa4']
+	md5_val = []
+	in_file = open('Q4in.text')
+	for line in in_file:
+		md5_val.append(line.strip())
+	in_file.close()
 	result_file = open('Q4.txt','w+')
 	
 	##this loop will run in O(n) because it's iterating the whole dictionary of size n, and comparison(if) takes a constant time, so total of O(n).##
@@ -80,7 +96,7 @@ def Q4():
 	
 	for pw in pw_and_freq:
 		#hash password and see if it matches one of the four from md5's
-		hashed_val = (hash.md5(pw)).hexdigest()
+		hashed_val = (hashlib.md5(pw)).hexdigest()
 		if(hashed_val == md5_val[0]):
 			#output format: md5		password	index in dictionary.
 			result_file.write("%s\t%s\t%d\n" %(md5_val[0],pw,i))
@@ -99,7 +115,7 @@ def Q4():
 			return
 		i+=1
 	result_file.close()
-#Q4()
+Q4()
 
 
 
