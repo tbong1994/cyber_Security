@@ -26,7 +26,7 @@ def Q1A():
 
 	for pw in sorted(pw_and_freq):
 		#format output.
-		result_file.write("%s\t%d\t%.10f\n" %(pw,pw_and_freq[pw],pw_prob(pw_and_freq[pw])))
+		result_file.write("{}\t{}\t{:.10f}\n".format(pw,pw_and_freq[pw],pw_prob(pw_and_freq[pw])))
 		
 	pw_file.close()
 	result_file.close()
@@ -37,8 +37,6 @@ def pw_prob(pw_freq):
 	probability = round(float(pw_freq)/320412510.0,10)
 	prob_list.append(float(probability))
 	return float(probability)
-	
-Q1A()
 
 def Q2A():
 	#entropy = sum of probablity*log(probability) for each password.
@@ -50,8 +48,6 @@ def Q2A():
 	#print "%.3f" %(entropy)
 	result_file.write("%.3f" %(entropy))
 	result_file.close()
-	
-Q2A()
 
 def Q2B():
 	#max entropy = log2(number of unique pw).
@@ -61,24 +57,22 @@ def Q2B():
 	result_file.write("%f" %(max_entropy))
 	result_file.close()
 
-Q2B()
-
 #repeat Q2A but this time, only unique passwords(multiset from the pws file) out of the first column from pw_and_freq
 # num of unique pws = length of dictionary.
 def Q3A():
 	result_file = open('Q3A.txt','w+')
 	entropy = 0.0
-	for prob in prob_list:
-		probability = float(1/len(prob_list))
-		print "probability: %.3f" %(probability)
-		#entropy += -probability*math.log(probability,2)
+	num_of_unique_pw = float(len(prob_list))
+	print num_of_unique_pw
+	for i in range(len(prob_list)):
+		probability = (1.0/num_of_unique_pw)
+		print "probability: %.10f" %(probability)
+		entropy += -probability*math.log(probability,2)
 	print "%.3f" %(entropy)
 	result_file.write("%.3f" %(entropy))
 	result_file.close()
 
-#Q3A()
-#def Q3B():
-#samething as Q2B
+#Q3B : the answer for Q3A is the same as the max entropy from Q2B. 
 
 #brute force search for password, given hash values. Dictionary is sorted by pws(order of likelyhood), so it would take less than O(n), hopefully.
 def Q4():
@@ -112,23 +106,16 @@ def Q4():
 			count += 1
 		##if all four were found, then exit this loop.
 		if(count == 4):
+			print "stopped at ith iteration!"
 			return
 		i+=1
 	result_file.close()
-Q4()
 
+def main():
+	Q1A()
+	Q2A()
+	Q2B()
+	Q3A()
+	Q4()
 
-
-
-
-
-	
-def Practice():
-	d = {'a':1,'b':1,'c':1,'d':1,'e':1,}
-	result_file = open('practice.txt','w+')
-	for elem in d:
-		result_file.write("%s\t%d\n" %(elem, d[elem]))	
-	result_file.close()
-#Practice()
-
-
+main()
