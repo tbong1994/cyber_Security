@@ -56,6 +56,9 @@ def Q2B():
 	result_file = open('Q2B.txt','w+')
 	result_file.write("%f" %(max_entropy))
 	result_file.close()
+	
+##Q2C
+##why maximum entropy is not achieved?
 
 #repeat Q2A but this time, only unique passwords(multiset from the pws file) out of the first column from pw_and_freq
 # num of unique pws = length of dictionary.
@@ -72,7 +75,8 @@ def Q3A():
 	result_file.write("%.3f" %(entropy))
 	result_file.close()
 
-#Q3B : the answer for Q3A is the same as the max entropy from Q2B. 
+##Q3B
+##the answer for Q3A is the same as the max entropy from Q2B. 
 
 #brute force search for password, given hash values. Dictionary is sorted by pws(order of likelyhood), so it would take less than O(n), hopefully.
 def Q4():
@@ -110,6 +114,13 @@ def Q4():
 			return
 		i+=1
 	result_file.close()
+##Q5)
+##A)Lorenzo (name of player), football,BuffBills(shortname for Buffalo Bills), 
+##B)Yes, because if I have the basic knowledge of what the pw may be, then I can neglect other irrelvent information.
+###for example, I only need to look for last names of the players on Buffalo Bills team.
+##C)This shrinks the range of guessing for me as it lets me know to look for the specific person who retired on April 7th of 2016. It will
+##be easier than looking for everyone who had retired.
+##D)
 
 def main():
 	Q1A()
