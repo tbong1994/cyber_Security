@@ -5,13 +5,15 @@ import hashlib
 
 #global vars
 pw_and_freq = {}  #password dictionary
+char_and_freq = {} #character dictionary for Q1B
 prob_list = []  #array of probability for each unique pw
-num_pwds = 0  #count # of pwds from the input file
+num_chars=0 #count number of characters for Q1B
+num_pwds = 0  #count the num of pwds from the input file
 
 def Q1A():
-	pw_file = open("../../passwords-hw4", "r")
+	pw_file = open("passwords-hw4", "r")
 	#output file
-	result_file = open("Q1A.text","w+")
+	result_file = open("Q1A.txt","w+")
 	global num_pwds
 	#map passwords to number of occurences of the pws in the file.
 	for pw in pw_file:
@@ -31,9 +33,30 @@ def Q1A():
 		
 	pw_file.close()
 	result_file.close()
-	#print(len(pw_and_freq))
+##calculate frequency of each character from the file.
+def Q1B():
+	#add each character and frequency to character freuqnecy dictionary.
+	global num_chars
+	for pw in pw_and_freq:
+		for char in pw:
+			if(char<='Z' and char >='A'):
+				num_chars +=1 #count characters
+				if(char_and_freq.has_key(char)):
+					char_and_freq[char]+=1
+				else:
+					char_and_freq[char] =1
+	result_file = open("Q1B.txt","w+")
+	for char in char_and_freq:
+		result_file.write("{}\t{}\t{:.2f}\n".format(char,char_and_freq[char],ch_prob(char_and_freq[char])))
+	result_file.close()
 	
-#calculate probability	
+#calculate probability of character over all occurences of characters.
+def ch_prob(ch_freq):
+	probability = float(ch_freq)/float(num_chars)
+	prob_in_percent = probability * 100.0
+	return float(prob_in_percent)	
+	
+#calculate probability of pwds in input file
 def pw_prob(pw_freq):
 	probability = round(float(pw_freq)/float(num_pwds),10)
 	prob_list.append(float(probability))
@@ -51,13 +74,10 @@ def Q2A():
 
 def Q2B():
 	#max entropy = log2(number of pw in the file, because for max entropy you assume that every element is unique, ie) only 1 occurence). 
-	max_entropy = math.log(len(num_pwds),2)
+	max_entropy = math.log((num_pwds),2)
 	result_file = open('Q2B.txt','w+')
-	result_file.write("%f" %(max_entropy))
+	result_file.write("%.3f" %(max_entropy))
 	result_file.close()
-
-##Q2C
-##why maximum entropy is not achieved?
 
 #repeat Q2A but this time, only unique passwords(multiset from the pws file) out of the first column from pw_and_freq
 # num of unique pws = length of dictionary.
@@ -65,35 +85,37 @@ def Q3A():
 	result_file = open('Q3A.txt','w+')
 	entropy = 0.0
 	num_of_unique_pw = float(len(prob_list))
-	print num_of_unique_pw
 	for i in range(len(prob_list)):
 		probability = (1.0/num_of_unique_pw)
 		entropy += -probability*math.log(probability,2)
 	result_file.write("%.3f" %(entropy))
 	result_file.close()
 
-##Q3B
-##the answer for Q3A is the same as the max entropy from Q2B. 
+def Q3B():
+	max_entropy = math.log(len(pw_and_freq),2)
+	result_file = open('Q3B.txt','w+')
+	result_file.write("%.3f" %(max_entropy))
+	result_file.close()
 
-#brute force search for password, given hash values. Dictionary is sorted by pws(order of likelyhood), so it would take less than O(n), hopefully.
+#brute force search for password, given hash values. Dictionary is sorted by frequency(order of likelyhood), so it would take less than O(n), hopefully.
 def Q4():
 	md5_val = []
-	in_file = open('Q4in.text')
+	in_file = open('Q4in.txt')
 	for line in in_file:
 		md5_val.append(line.strip())
 	in_file.close()
 	result_file = open('Q4.txt','w+')
 	
-	##this loop will run in O(n) because it's iterating the whole dictionary of size n, and comparison(if) takes a constant time, so total of O(n).##
-	##if we find all four pws before O(n), it will run for i iterations, but in the worst case, it will run for O(n).
-	
+	##This loop will run in O(n x i), n is the number of the input hash values, i is the index for each hashvalue from the password dictionary.
+	##Each hash value from the input will be compared to every element in the dictionary until the comparison returns true,
+	##when the comparison returns true(it wil return true, because we assume that all the passwords corresponding to the input hash values are inside the dictionary) 
+	##it will skip the remaining iterations over the dictionary and move on to the next hash value from
+	##the input file. Thus, for each hash value(n), there will be i iterations.
+
 	count = 0 #keep counting until all four md5's have been found.
 	
 	#sorting dictionary by values (mydict.iteritems(), key=lambda (k,v): (v,k))...
 	#reference from http://www.saltycrane.com/blog/2007/09/how-to-sort-python-dictionary-by-keys/
-	
-	#iterate through the md5_val and for each value in md5_Val, compare that value with the hash value of the 
-	#password from the sorted list. and return.
 	for md5 in md5_val :
 		i = 1 #keep rank
 		for pw, freq in sorted(pw_and_freq.iteritems(), key=lambda (k,v):(v,k)):
@@ -106,23 +128,17 @@ def Q4():
 			##if all four were found, then exit this loop.
 			if(count == len(md5_val)):
 				#stop if all the md5 values are found in the dictionary.
-				print "stopped at ith iteration!"
 				return
 			i+=1
 	result_file.close()
-##Q5)
-##A)Lorenzo (name of player), football,BuffBills(shortname for Buffalo Bills), 
-##B)Yes, because if I have the basic knowledge of what the pw may be, then I can neglect other irrelvent information.
-###for example, I only need to look for last names of the players on Buffalo Bills team.
-##C)This shrinks the range of guessing for me as it lets me know to look for the specific person who retired on April 7th of 2016. It will
-##be easier than looking for everyone who had retired.
-##D)With the side channel, you can go online and search for the hash value and find the corresponding password for that hash value. I got 'tarpley' for the password.
 
 def main():
 	Q1A()
+	Q1B()
 	Q2A()
 	Q2B()
 	Q3A()
+	Q3B()
 	Q4()
 
 if __name__ == "__main__":
