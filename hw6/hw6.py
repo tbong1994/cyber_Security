@@ -1,5 +1,5 @@
 #hw6
-
+from collections import OrderedDict
 #take in 2 files and do an analysis.
 #IN = internet
 #@param (record name,ttl,record class,record type,record data)
@@ -30,6 +30,7 @@ def unique(file_name):
 	diff_name_for_class={} # class:[]
 	diff_name_for_type = {} # type:[]
 	diff_name_for_ttl={}# ttl:[]
+	diff_name_for_data={}# data:[]
 	
 	count_of_records = 0 #every line is unique in this file, so just count the lines.
 	#prev_name = ""
@@ -71,6 +72,7 @@ def unique(file_name):
 		#check if record name is already in that array or dictionary. if yes, then discard, if no, then add it to the array or dict.
 		#do this for parts c,d. 
 		
+		#PART D
 		if(diff_name_for_type.has_key(sp_line[3])): 
 			#print sp_line[3]
 			#if(sp_line[3]=='SOA'):
@@ -83,26 +85,92 @@ def unique(file_name):
 				names[sp_line[0]] = 1
 		else:
 			diff_name_for_type.setdefault(sp_line[3], {sp_line[0]:1})
-			print sp_line[3]
+			#print sp_line[3]
+		
+		
+		#PART C
+		
+		if(diff_name_for_class.has_key(sp_line[2])): 
+			#print sp_line[3]
+			#if(sp_line[3]=='SOA'):
+				#print sp_line[0]
+			names = diff_name_for_class[sp_line[2]] #dictionary of names
+			if(names.has_key(sp_line[0])):
+				#diff_name_for_type[sp_line[3]][sp_line[0]] +=1
+				names[sp_line[0]] +=1
+			else:
+				names[sp_line[0]] = 1
+		else:
+			diff_name_for_class.setdefault(sp_line[2], {sp_line[0]:1})
+		
+		#PART E 
+		
+		if(diff_name_for_ttl.has_key(sp_line[1])): 
+			#print sp_line[3]
+			#if(sp_line[3]=='SOA'):
+				#print sp_line[0]
+			names = diff_name_for_ttl[sp_line[1]] #dictionary of names
+			if(names.has_key(sp_line[0])):
+				#diff_name_for_type[sp_line[3]][sp_line[0]] +=1
+				names[sp_line[0]] +=1
+			else:
+				names[sp_line[0]] = 1
+		else:
+			diff_name_for_ttl.setdefault(sp_line[1], {sp_line[0]:1})
+			
+		
+		#PART F 
+		
+		if(diff_name_for_data.has_key(sp_line[4])): 
+			#print sp_line[3]
+			#if(sp_line[3]=='SOA'):
+				#print sp_line[0]
+			names = diff_name_for_data[sp_line[4]] #dictionary of names
+			if(names.has_key(sp_line[0])):
+				#diff_name_for_type[sp_line[3]][sp_line[0]] +=1
+				names[sp_line[0]] +=1
+			else:
+				names[sp_line[0]] = 1
+		else:
+			diff_name_for_data.setdefault(sp_line[4], {sp_line[0]:1})
+		
 	#part a and b
 	#LENGTH OF EACH DICTIONARY REPRESENTS # OF UNIQUE VALUES.
+	
+	#PART A PRINT 
+	#print "%s : %d" %("number of records: ",count_of_records)
+	
+	#PART B PRINT
 	#print ("%s%d" %("unique records: ",count_of_records))
 	#print ("%s%d" %("unique names: ",len(uniq_name)))
 	#print ("%s%d" %("unique ttl: ",len(uniq_ttl)))
 	#print ("%s%d" %("unique class: ",len(uniq_class)))
 	#print ("%s%d" %("unique type: ",len(uniq_type)))
 	#print ("%s%d" %("unique data: ",len(uniq_data)))
+
 	
+	#PART C PRINT
+	#for i in sorted(diff_name_for_class): #sort by name
+		#print "%s : %d" %(i,len(diff_name_for_class[i]))
 		
-	#print len(uniq_line_by_name)
-	#print len(uniq_line_by_ttl)
-	#print len(uniq_line_by_class)
-	#print len(uniq_line_by_type)
 	
-	#part d
-	for i in sorted(diff_name_for_type): #sort by name
-		print "%s : %d" %(i,len(diff_name_for_type[i]))
-		
+	#PART D PRINT
+	#for i in sorted(diff_name_for_type): #sort by name
+		#print "%s : %d" %(i,len(diff_name_for_type[i]))
+	
+	#PART E PRINT ===== SORT BY LIKELYHOOD (VALUE)
+	
+	#print_dict={}
+	#for i in sorted(diff_name_for_ttl):
+		#print_dict[i]=len(diff_name_for_ttl[i])
+	#descending_ttl = OrderedDict(sorted(print_dict.items(), key=lambda k: k[1], reverse=True)) #sort by value in descending order.
+	#for i in descending_ttl:
+		#print "%s %s : %s %s" %("TTL_Value",i,"count:",descending_ttl[i])
+	
+	
+	#PART F PRINT
+	#for i in sorted(diff_name_for_data): #sort by name
+		#print "%s : %d" %(i,len(diff_name_for_data[i]))
 	zone_file.close()
 	
 unique("../../root.zone")
