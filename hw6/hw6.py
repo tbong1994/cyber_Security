@@ -1,5 +1,6 @@
 #hw6
 from collections import OrderedDict
+import math
 #take in 2 files and do an analysis.
 #IN = internet
 #@param (record name,ttl,record class,record type,record data)
@@ -133,7 +134,7 @@ def unique(file_name):
 				names[sp_line[0]] = 1
 		else:
 			diff_name_for_data.setdefault(sp_line[4], {sp_line[0]:1})
-		
+	zone_file.close()
 	#part a and b
 	#LENGTH OF EACH DICTIONARY REPRESENTS # OF UNIQUE VALUES.
 	
@@ -171,7 +172,36 @@ def unique(file_name):
 	#PART F PRINT
 	#for i in sorted(diff_name_for_data): #sort by name
 		#print "%s : %d" %(i,len(diff_name_for_data[i]))
-	zone_file.close()
+	#zone_file.close()
 	
-unique("../../root.zone")
+#unique("../../root.zone")
 
+def entropy(file_name):
+	zone_file = open(file_name, "r") #open file
+	
+	num_of_lines = 0 #total_range for probability calculation.
+	num_of_name = {} #pair of domain name and count
+	#entropy of each domain name.
+	#entropy = sum of [probablity*log(probability)] for each domain.
+	
+	for line in zone_file:
+		num_of_lines+=1
+		sp_line = line.split()
+		if(num_of_name.has_key(sp_line[0])):
+			num_of_name[sp_line[0]] +=1
+		else:
+			num_of_name[sp_line[0]] = 1
+	zone_file.close()
+	#output format = (domain name'\t'entropy)
+	
+	#total_entropy = 0.0
+	for name in num_of_name:
+		prob = calc_prob(num_of_name[name],num_of_lines)
+		print "%s\t%.5f" %(name,-prob*math.log(prob,2))
+
+	#print total_entropy
+	
+def calc_prob(val,total_range):
+	return float(val)/float(total_range)
+	
+entropy("../../root.zone")
