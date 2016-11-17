@@ -161,20 +161,19 @@ def unique(file_name):
 	
 	#PART E PRINT ===== SORT BY LIKELYHOOD (VALUE)
 	
-	#print_dict={}
-	#for i in sorted(diff_name_for_ttl):
-		#print_dict[i]=len(diff_name_for_ttl[i])
-	#descending_ttl = OrderedDict(sorted(print_dict.items(), key=lambda k: k[1], reverse=True)) #sort by value in descending order.
-	#for i in descending_ttl:
-		#print "%s %s : %s %s" %("TTL_Value",i,"count:",descending_ttl[i])
-	
-	
+	print_dict={}
+	for i in sorted(diff_name_for_ttl):
+		print_dict[i]=len(diff_name_for_ttl[i])
+	descending_ttl = OrderedDict(sorted(print_dict.items(), key=lambda k: k[1], reverse=True)) #sort by value in descending order.
+	for i in descending_ttl:
+		print "%s %s : %s %s" %("TTL_Value",i,"count:",descending_ttl[i])
+	print count_of_records
 	#PART F PRINT
 	#for i in sorted(diff_name_for_data): #sort by name
 		#print "%s : %d" %(i,len(diff_name_for_data[i]))
 	#zone_file.close()
 	
-#unique("../../root.zone")
+unique("../../root.zone")
 
 def entropy(file_name):
 	zone_file = open(file_name, "r") #open file
@@ -204,4 +203,4 @@ def entropy(file_name):
 def calc_prob(val,total_range):
 	return float(val)/float(total_range)
 	
-entropy("../../root.zone")
+#entropy("../../root.zone")
