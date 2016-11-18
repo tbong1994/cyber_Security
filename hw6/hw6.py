@@ -77,7 +77,7 @@ def unique(file_name1, file_name2):
 			#print sp_line[3]
 			#if(sp_line[3]=='SOA'):
 				#print sp_line[0]
-			names = diff_name_for_type[sp_line[3]] #dictionary of names
+			names = diff_name_for_type[sp_line[3]] #dictionary of {type:{names:#}}
 			if(names.has_key(sp_line[0])):
 				#diff_name_for_type[sp_line[3]][sp_line[0]] +=1
 				names[sp_line[0]] +=1
@@ -94,7 +94,7 @@ def unique(file_name1, file_name2):
 			#print sp_line[3]
 			#if(sp_line[3]=='SOA'):
 				#print sp_line[0]
-			names = diff_name_for_class[sp_line[2]] #dictionary of names
+			names = diff_name_for_class[sp_line[2]] #dictionary of {class:{names:#}}
 			if(names.has_key(sp_line[0])):
 				#diff_name_for_type[sp_line[3]][sp_line[0]] +=1
 				names[sp_line[0]] +=1
@@ -109,7 +109,7 @@ def unique(file_name1, file_name2):
 			#print sp_line[3]
 			#if(sp_line[3]=='SOA'):
 				#print sp_line[0]
-			names = diff_name_for_ttl[sp_line[1]] #dictionary of names
+			names = diff_name_for_ttl[sp_line[1]] #dictionary of {ttl:names:#}}
 			if(names.has_key(sp_line[0])):
 				#diff_name_for_type[sp_line[3]][sp_line[0]] +=1
 				names[sp_line[0]] +=1
@@ -125,7 +125,7 @@ def unique(file_name1, file_name2):
 			#print sp_line[3]
 			#if(sp_line[3]=='SOA'):
 				#print sp_line[0]
-			names = diff_name_for_data[sp_line[4]] #dictionary of names
+			names = diff_name_for_data[sp_line[4]] #dictionary of {data:{names:#}}
 			if(names.has_key(sp_line[0])):
 				#diff_name_for_type[sp_line[3]][sp_line[0]] +=1
 				names[sp_line[0]] +=1
@@ -201,45 +201,39 @@ def unique(file_name1, file_name2):
 	#prev_name = ""
 	only_five = 0
 	for line in net_file:
-		count_of_records_net +=1
-		#print line
 		if(line!='\n'): #ignore empty lines
 			sp_line = line.split() #line is more complex. get rid of the ones you don't need.
 			if(sp_line[0][0]=='$' or sp_line[0][0] == ';'): #don't need such lines
+				if(sp_line[0]=='$TTL'):
+					if(uniq_ttl_net.has_key(sp_line[1])):
+						uniq_ttl_net[sp_line[1]] += 1
+					else:
+						uniq_ttl_net[sp_line[1]] = 1
 				continue
+				#continue
 			if(len(sp_line)<3 or len(sp_line)>3):
 				continue
-			else:#these lines are what we need. 3 tuple(name, class, data(domain names))
-				print line
-		#if(uniq_name_net.has_key(sp_line[0])):
-			#uniq_name_net[sp_line[0]] +=1
-		##elif(len(sp_line[0])==1):
-			##uniq_name[prev_name]+=1
-		#else:
-			#uniq_name_net[sp_line[0]] = 1
-			##uniq_line_by_name[sp_line[0]] = line
-		#if(uniq_ttl_net.has_key(sp_line[1])):
-			#uniq_ttl_net[sp_line[1]] +=1
-		#else:
-			#uniq_ttl_net[sp_line[1]] = 1
-			##uniq_line_by_ttl[sp_line[1]] = line
-		#if(uniq_class_net.has_key(sp_line[2])):
-			#uniq_class_net[sp_line[2]] +=1
-		#else:
-			#uniq_class_net[sp_line[2]] = 1
-			##uniq_line_by_class[sp_line[2]] = line
-			
-		#if(uniq_type_net.has_key(sp_line[3])):
-			#uniq_type_net[sp_line[3]] +=1
-		#else:
-			#uniq_type_net[sp_line[3]] = 1
-			##uniq_line_by_type[sp_line[3]] = line
-			
-		#if(uniq_data_net.has_key(sp_line[4])):
-			#uniq_data_net[sp_line[4]] +=1
-		#else:
-			#uniq_data_net[sp_line[4]] = 1
-		
+			else:#these lines are what we need. 3 tuple(name, type, data(domain names))
+				count_of_records_net +=1
+				#print line
+				if(uniq_name_net.has_key(sp_line[0])):
+					uniq_name_net[sp_line[0]] +=1
+				#elif(len(sp_line[0])==1):
+					#uniq_name[prev_name]+=1
+				else:
+					uniq_name_net[sp_line[0]] = 1
+					#uniq_line_by_name[sp_line[0]] = line
+				if(uniq_type_net.has_key(sp_line[1])):
+					uniq_type_net[sp_line[1]] +=1
+				else:
+					uniq_type_net[sp_line[1]] = 1
+					#uniq_line_by_ttl[sp_line[1]] = line
+				if(uniq_data_net.has_key(sp_line[2])):
+					uniq_data_net[sp_line[2]] +=1
+				else:
+					uniq_data_net[sp_line[2]] = 1
+					#uniq_line_by_class[sp_line[2]] = line
+				
 		##for part c,d you can have a separate Dictionary(diff_names_for_type,etc) that saves record type as the key, and 
 		##value for the key is either an array or a dictionary.
 		##you can check each line and if diff_names_for_type has typeA as a key already, if yes, then check the value(array or dictionary) and 
@@ -247,21 +241,21 @@ def unique(file_name1, file_name2):
 		##do this for parts c,d. 
 		
 		##PART D
-		#if(diff_name_for_type_net.has_key(sp_line[3])): 
-			#names = diff_name_for_type_net[sp_line[3]] #dictionary of names
-			#if(names.has_key_net(sp_line[0])):
-				#names[sp_line[0]] +=1
-			#else:
-				#names[sp_line[0]] = 1
-		#else:
-			#diff_name_for_type_net.setdefault(sp_line[3], {sp_line[0]:1})
-			##print sp_line[3]
+		if(diff_name_for_type_net.has_key(sp_line[1])): 
+			names = diff_name_for_type_net[sp_line[1]] #dictionary of {type:{names:#}}
+			if(names.has_key(sp_line[0])):
+				names[sp_line[0]] +=1
+			else:
+				names[sp_line[0]] = 1
+		else:
+			diff_name_for_type_net.setdefault(sp_line[1], {sp_line[0]:1})
+			#print sp_line[3]
 		
 		
 		##PART C
 		
 		#if(diff_name_for_class_net.has_key(sp_line[2])): 
-			#names = diff_name_for_class_net[sp_line[2]] #dictionary of names
+			#names = diff_name_for_class_net[sp_line[2]] #dictionary of {class:{names:#}}
 			#if(names.has_key(sp_line[0])):
 				#names[sp_line[0]] +=1
 			#else:
@@ -284,14 +278,14 @@ def unique(file_name1, file_name2):
 		
 		##PART F 
 		
-		#if(diff_name_for_data_net.has_key(sp_line[4])): 
-			#names = diff_name_for_data_net[sp_line[4]] #dictionary of names
-			#if(names.has_key(sp_line[0])):
-				#names[sp_line[0]] +=1
-			#else:
-				#names[sp_line[0]] = 1
-		#else:
-			#diff_name_for_data_net.setdefault(sp_line[4], {sp_line[0]:1})
+		if(diff_name_for_data_net.has_key(sp_line[2])): 
+			names = diff_name_for_data_net[sp_line[2]] #dictionary of {data:{names:#}}
+			if(names.has_key(sp_line[0])):
+				names[sp_line[0]] +=1
+			else:
+				names[sp_line[0]] = 1
+		else:
+			diff_name_for_data_net.setdefault(sp_line[2], {sp_line[0]:1})
 			
 			
 	net_file.close()
@@ -299,38 +293,42 @@ def unique(file_name1, file_name2):
 	#LENGTH OF EACH DICTIONARY REPRESENTS # OF UNIQUE VALUES.
 	
 	#PART A PRINT 
-	print "%s : %d" %("number of records: ",count_of_records)
+	print "%s : %d" %("number of records: ",count_of_records_net)
 	
 	#PART B PRINT
-	print ("%s%d" %("unique records: ",count_of_records))
-	print ("%s%d" %("unique names: ",len(uniq_name)))
-	print ("%s%d" %("unique ttl: ",len(uniq_ttl)))
-	print ("%s%d" %("unique class: ",len(uniq_class)))
-	print ("%s%d" %("unique type: ",len(uniq_type)))
-	print ("%s%d" %("unique data: ",len(uniq_data)))
-
+	print ("%s%d" %("unique names: ",len(uniq_name_net)))
+	print ("%s%d" %("unique ttl: ",len(uniq_ttl_net)))
+	#print ("%s%d" %("unique class: ",len(uniq_class_net)))
+	print ("%s%d" %("unique type: ",len(uniq_type_net)))
+	print ("%s%d" %("unique data: ",len(uniq_data_net)))
+	
+	#for i in uniq_name_net:
+		#print i
 	
 	#PART C PRINT
-	for i in sorted(diff_name_for_class): #sort by name
-		print "%s : %d" %(i,len(diff_name_for_class[i]))
+	#for i in sorted(diff_name_for_class): #sort by name
+		#print "%s : %d" %(i,len(diff_name_for_class[i]))
 		
 	
 	#PART D PRINT
-	for i in sorted(diff_name_for_type): #sort by name
-		print "%s : %d" %(i,len(diff_name_for_type[i]))
+	for i in sorted(diff_name_for_type_net): #sort by name
+		print "%s : %d" %(i,len(diff_name_for_type_net[i]))
 	
 	#PART E PRINT ===== SORT BY LIKELYHOOD (VALUE)
 	
-	print_dict_net={}
-	for i in sorted(diff_name_for_ttl_net):
-		print_dict_net[i]=len(diff_name_for_ttl_net[i])
-	descending_ttl_net = OrderedDict(sorted(print_dict_net.items(), key=lambda k: k[1], reverse=True)) #sort by value in descending order.
-	for i in descending_ttl_net:
-		print "%s %s : %s %s" %("TTL_Value",i,"count:",descending_ttl_net[i])
-	print count_of_records_net
+	#print_dict_net={}
+	#for i in sorted(diff_name_for_ttl_net):
+		#print_dict_net[i]=len(diff_name_for_ttl_net[i])
+	#descending_ttl_net = OrderedDict(sorted(print_dict_net.items(), key=lambda k: k[1], reverse=True)) #sort by value in descending order.
+	#for i in descending_ttl_net:
+		#print "%s %s : %s %s" %("TTL_Value",i,"count:",descending_ttl_net[i])
+	#print count_of_records_net
+	
+	
 	#PART F PRINT
-	for i in sorted(diff_name_for_data): #sort by name
-		print "%s : %d" %(i,len(diff_name_for_data[i]))
+	for i in sorted(diff_name_for_data_net): #sort by name
+		print "%s : %d" %(i,len(diff_name_for_data_net[i]))
+	
 	
 unique("../../root.zone", "../../net.zone")
 
