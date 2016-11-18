@@ -199,106 +199,101 @@ def unique(file_name1, file_name2):
 	
 	count_of_records_net = 0 #every line is unique in this file, so just count the lines.
 	#prev_name = ""
+	only_five = 0
 	for line in net_file:
-		print line
 		count_of_records_net +=1
-		sp_line = line.split() #line is an array with 5 elements now.[name,ttl,class,type,data]
-		if(uniq_name_net.has_key(sp_line[0])):
-			uniq_name_net[sp_line[0]] +=1
-		#elif(len(sp_line[0])==1):
-			#uniq_name[prev_name]+=1
-		else:
-			uniq_name_net[sp_line[0]] = 1
-			#uniq_line_by_name[sp_line[0]] = line
-		if(uniq_ttl_net.has_key(sp_line[1])):
-			uniq_ttl_net[sp_line[1]] +=1
-		else:
-			uniq_ttl_net[sp_line[1]] = 1
-			#uniq_line_by_ttl[sp_line[1]] = line
-		if(uniq_class_net.has_key(sp_line[2])):
-			uniq_class_net[sp_line[2]] +=1
-		else:
-			uniq_class_net[sp_line[2]] = 1
-			#uniq_line_by_class[sp_line[2]] = line
+		#print line
+		if(line!='\n'): #ignore empty lines
+			sp_line = line.split() #line is more complex. get rid of the ones you don't need.
+			if(sp_line[0][0]=='$' or sp_line[0][0] == ';'): #don't need such lines
+				continue
+			if(len(sp_line)<3 or len(sp_line)>3):
+				continue
+			else:#these lines are what we need. 3 tuple(name, class, data(domain names))
+				print line
+		#if(uniq_name_net.has_key(sp_line[0])):
+			#uniq_name_net[sp_line[0]] +=1
+		##elif(len(sp_line[0])==1):
+			##uniq_name[prev_name]+=1
+		#else:
+			#uniq_name_net[sp_line[0]] = 1
+			##uniq_line_by_name[sp_line[0]] = line
+		#if(uniq_ttl_net.has_key(sp_line[1])):
+			#uniq_ttl_net[sp_line[1]] +=1
+		#else:
+			#uniq_ttl_net[sp_line[1]] = 1
+			##uniq_line_by_ttl[sp_line[1]] = line
+		#if(uniq_class_net.has_key(sp_line[2])):
+			#uniq_class_net[sp_line[2]] +=1
+		#else:
+			#uniq_class_net[sp_line[2]] = 1
+			##uniq_line_by_class[sp_line[2]] = line
 			
-		if(uniq_type_net.has_key(sp_line[3])):
-			uniq_type_net[sp_line[3]] +=1
-		else:
-			uniq_type_net[sp_line[3]] = 1
-			#uniq_line_by_type[sp_line[3]] = line
+		#if(uniq_type_net.has_key(sp_line[3])):
+			#uniq_type_net[sp_line[3]] +=1
+		#else:
+			#uniq_type_net[sp_line[3]] = 1
+			##uniq_line_by_type[sp_line[3]] = line
 			
-		if(uniq_data_net.has_key(sp_line[4])):
-			uniq_data_net[sp_line[4]] +=1
-		else:
-			uniq_data_net[sp_line[4]] = 1
+		#if(uniq_data_net.has_key(sp_line[4])):
+			#uniq_data_net[sp_line[4]] +=1
+		#else:
+			#uniq_data_net[sp_line[4]] = 1
 		
-		#for part c,d you can have a separate Dictionary(diff_names_for_type,etc) that saves record type as the key, and 
-		#value for the key is either an array or a dictionary.
-		#you can check each line and if diff_names_for_type has typeA as a key already, if yes, then check the value(array or dictionary) and 
-		#check if record name is already in that array or dictionary. if yes, then discard, if no, then add it to the array or dict.
-		#do this for parts c,d. 
+		##for part c,d you can have a separate Dictionary(diff_names_for_type,etc) that saves record type as the key, and 
+		##value for the key is either an array or a dictionary.
+		##you can check each line and if diff_names_for_type has typeA as a key already, if yes, then check the value(array or dictionary) and 
+		##check if record name is already in that array or dictionary. if yes, then discard, if no, then add it to the array or dict.
+		##do this for parts c,d. 
 		
-		#PART D
-		if(diff_name_for_type_net.has_key(sp_line[3])): 
-			#print sp_line[3]
-			#if(sp_line[3]=='SOA'):
-				#print sp_line[0]
-			names = diff_name_for_type_net[sp_line[3]] #dictionary of names
-			if(names.has_key_net(sp_line[0])):
-				#diff_name_for_type[sp_line[3]][sp_line[0]] +=1
-				names[sp_line[0]] +=1
-			else:
-				names[sp_line[0]] = 1
-		else:
-			diff_name_for_type_net.setdefault(sp_line[3], {sp_line[0]:1})
-			#print sp_line[3]
+		##PART D
+		#if(diff_name_for_type_net.has_key(sp_line[3])): 
+			#names = diff_name_for_type_net[sp_line[3]] #dictionary of names
+			#if(names.has_key_net(sp_line[0])):
+				#names[sp_line[0]] +=1
+			#else:
+				#names[sp_line[0]] = 1
+		#else:
+			#diff_name_for_type_net.setdefault(sp_line[3], {sp_line[0]:1})
+			##print sp_line[3]
 		
 		
-		#PART C
+		##PART C
 		
-		if(diff_name_for_class_net.has_key(sp_line[2])): 
-			#print sp_line[3]
-			#if(sp_line[3]=='SOA'):
-				#print sp_line[0]
-			names = diff_name_for_class_net[sp_line[2]] #dictionary of names
-			if(names.has_key(sp_line[0])):
-				#diff_name_for_type[sp_line[3]][sp_line[0]] +=1
-				names[sp_line[0]] +=1
-			else:
-				names[sp_line[0]] = 1
-		else:
-			diff_name_for_class_net.setdefault(sp_line[2], {sp_line[0]:1})
+		#if(diff_name_for_class_net.has_key(sp_line[2])): 
+			#names = diff_name_for_class_net[sp_line[2]] #dictionary of names
+			#if(names.has_key(sp_line[0])):
+				#names[sp_line[0]] +=1
+			#else:
+				#names[sp_line[0]] = 1
+		#else:
+			#diff_name_for_class_net.setdefault(sp_line[2], {sp_line[0]:1})
 		
-		#PART E 
+		##PART E 
 		
-		if(diff_name_for_ttl_net.has_key(sp_line[1])): 
-			#print sp_line[3]
-			#if(sp_line[3]=='SOA'):
-				#print sp_line[0]
-			names = diff_name_for_ttl_net[sp_line[1]] #dictionary of names
-			if(names.has_key(sp_line[0])):
-				#diff_name_for_type[sp_line[3]][sp_line[0]] +=1
-				names[sp_line[0]] +=1
-			else:
-				names[sp_line[0]] = 1
-		else:
-			diff_name_for_ttl_net.setdefault(sp_line[1], {sp_line[0]:1})
+		#if(diff_name_for_ttl_net.has_key(sp_line[1])): 
+			
+			#names = diff_name_for_ttl_net[sp_line[1]] #dictionary of names
+			#if(names.has_key(sp_line[0])):
+				#names[sp_line[0]] +=1
+			#else:
+				#names[sp_line[0]] = 1
+		#else:
+			#diff_name_for_ttl_net.setdefault(sp_line[1], {sp_line[0]:1})
 			
 		
-		#PART F 
+		##PART F 
 		
-		if(diff_name_for_data_net.has_key(sp_line[4])): 
-			#print sp_line[3]
-			#if(sp_line[3]=='SOA'):
-				#print sp_line[0]
-			names = diff_name_for_data_net[sp_line[4]] #dictionary of names
-			if(names.has_key(sp_line[0])):
-				#diff_name_for_type[sp_line[3]][sp_line[0]] +=1
-				names[sp_line[0]] +=1
-			else:
-				names[sp_line[0]] = 1
-		else:
-			diff_name_for_data_net.setdefault(sp_line[4], {sp_line[0]:1})
+		#if(diff_name_for_data_net.has_key(sp_line[4])): 
+			#names = diff_name_for_data_net[sp_line[4]] #dictionary of names
+			#if(names.has_key(sp_line[0])):
+				#names[sp_line[0]] +=1
+			#else:
+				#names[sp_line[0]] = 1
+		#else:
+			#diff_name_for_data_net.setdefault(sp_line[4], {sp_line[0]:1})
+			
+			
 	net_file.close()
 	#part a and b
 	#LENGTH OF EACH DICTIONARY REPRESENTS # OF UNIQUE VALUES.
