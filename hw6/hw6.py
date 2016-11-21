@@ -211,8 +211,9 @@ def unique(file_name1, file_name2):
 						uniq_ttl_net[sp_line[1]] = 1
 				continue
 				#continue
-			if(len(sp_line)<3 or len(sp_line)>3):
-				continue
+			if(len(sp_line)<3 or len(sp_line)>3): #extract info from these lines, too
+				print line
+				#continue
 			else:#these lines are what we need. 3 tuple(name, type, data(domain names))
 				count_of_records_net +=1
 				#print line
@@ -241,14 +242,15 @@ def unique(file_name1, file_name2):
 		##do this for parts c,d. 
 		
 		##PART D
-		if(diff_name_for_type_net.has_key(sp_line[1])): 
-			names = diff_name_for_type_net[sp_line[1]] #dictionary of {type:{names:#}}
-			if(names.has_key(sp_line[0])):
-				names[sp_line[0]] +=1
-			else:
-				names[sp_line[0]] = 1
-		else:
-			diff_name_for_type_net.setdefault(sp_line[1], {sp_line[0]:1})
+		#if(diff_name_for_type_net.has_key(sp_line[1])): 
+			#names = diff_name_for_type_net[sp_line[1]] #dictionary of {type:{names:#}}
+			#if(names.has_key(sp_line[0])):
+				#names[sp_line[0]] +=1
+			#else:
+				#names[sp_line[0]] = 1
+		#else:
+			#diff_name_for_type_net.setdefault(sp_line[1], {sp_line[0]:1})
+			
 			#print sp_line[3]
 		
 		
@@ -278,14 +280,14 @@ def unique(file_name1, file_name2):
 		
 		##PART F 
 		
-		if(diff_name_for_data_net.has_key(sp_line[2])): 
-			names = diff_name_for_data_net[sp_line[2]] #dictionary of {data:{names:#}}
-			if(names.has_key(sp_line[0])):
-				names[sp_line[0]] +=1
-			else:
-				names[sp_line[0]] = 1
-		else:
-			diff_name_for_data_net.setdefault(sp_line[2], {sp_line[0]:1})
+		#if(diff_name_for_data_net.has_key(sp_line[2])): 
+			#names = diff_name_for_data_net[sp_line[2]] #dictionary of {data:{names:#}}
+			#if(names.has_key(sp_line[0])):
+				#names[sp_line[0]] +=1
+			#else:
+				#names[sp_line[0]] = 1
+		#else:
+			#diff_name_for_data_net.setdefault(sp_line[2], {sp_line[0]:1})
 			
 			
 	net_file.close()
